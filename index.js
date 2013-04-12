@@ -74,6 +74,7 @@ Core.prototype.changeStatus = function(options){
       mod[options.perform](this);
     };
     status = options.success;
+    this.events.emit('change status', options);
     return this;
   }
   throw new Error(options.fail);

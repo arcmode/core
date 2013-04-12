@@ -1,6 +1,9 @@
 <script src="build/build.js"></script>
 <script>
   var core = require('core').create();
+  core.events.on('change status', function(data) {
+    console.log(data);
+  });
   var mock = {
     status: 'uninitialized',
     init: function(core){
