@@ -17,6 +17,7 @@ var Emitter = require('emitter');
 /**
  * @constructor Core
  */
+
 var Core = function() {
   this.modules = [];
 };
@@ -35,10 +36,12 @@ Core.prototype = Emitter.prototype;
  * @return {Core} this for chaining
  * @api public
  */
+
 Core.prototype.init = function(){
   for (var i = modules.length - 1; i >= 0; i--){
-    modules[i].init();
+    modules[i].init(this);
   };
+  this.emit('init');
   return this;
 };
 
@@ -50,6 +53,7 @@ Core.prototype.init = function(){
  * @return {Core} this for chaining
  * @api public
  */
+
 Core.prototype.use = function(module){
   this.modules.push(module);
   return this;
@@ -58,4 +62,5 @@ Core.prototype.use = function(module){
 /*
  * Expose `Core`
  */
+
 module.exports = Core;
