@@ -41,8 +41,13 @@ var joinEvents = function(hosted, host) {
 
 var Core = function() {
   this.modules = {};
-  this.events = new Emitter();
 };
+
+/*
+ * Inherit from Emiiter
+ */
+
+Core.prototype.events = new Emitter();
 
 /**
  * @method status
