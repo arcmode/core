@@ -27,6 +27,6 @@ testBrowser:
 	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/test.html
 
 clean:
-	rm -fr build components template.js
+	rm -fr build components node_modules
 
 .PHONY: install test build clean
