@@ -79,7 +79,10 @@ Core.prototype.changeStatus = function(options){
       mod[options.perform](this);
     };
     status = options.success;
-    this.events.emit('change status', options);
+    this.events.emit('change status', {
+      target: this,
+      data: options
+    });
     return this;
   }
   throw new Error(options.fail);
@@ -94,8 +97,8 @@ Core.prototype.changeStatus = function(options){
  * @api public
  */
 
-Core.prototype.init = function(parent){
-  joinEvents(this, parent);
+Core.prototype.init = function(){
+  joinEvents(this, this.parent);
   var options = {
     when: 'uninitialized',
     perform: 'init',
@@ -155,6 +158,7 @@ Core.prototype.resume = function(){
  */
 
 Core.prototype.use = function(id, module){
+  module.parent = this;
   this.modules[id] = module;
   return this;
 };
