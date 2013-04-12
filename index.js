@@ -20,13 +20,8 @@ var Emitter = require('emitter');
 
 var Core = function() {
   this.modules = [];
+  this.emitter = new Emitter();
 };
-
-/*
- * Inherit from Emitter
- */
-
-Core.prototype = Emitter.prototype;
 
 /**
  * @method init
@@ -41,7 +36,7 @@ Core.prototype.init = function(){
   for (var i = modules.length - 1; i >= 0; i--){
     modules[i].init(this);
   };
-  this.emit('init');
+  this.emitter.emit('init');
   return this;
 };
 
