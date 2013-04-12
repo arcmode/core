@@ -1,5 +1,26 @@
 <script src="build/build.js"></script>
 <script>
-  var core = require('core');
-  console.log(core.create());
+  var core = require('core').create();
+  var mock = {
+    status: 'uninitialized',
+    init: function(core){
+      console.log(core, 'initializing mock module');
+      return this;
+    },
+    stop: function(core){
+      console.log(core, 'stoping mock module');
+      return this;
+    },
+    resume: function(core){
+      console.log(core, 'resuming mock module');
+      return this;
+    }
+  };
+  core.use('mock', mock);
+  core.init();
+  console.log(core);
+  core.stop();
+  console.log(core);
+  core.resume();
+  console.log(core);
 </script>
