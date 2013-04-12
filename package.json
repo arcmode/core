@@ -1,0 +1,16 @@
+{
+  "name": "core",
+  "version": "0.0.1",
+  "description": "Use and initialize objects with init function property.",
+  "author": "David Rojas <drojascamaggi@gmail.com>",
+  "dependencies": {
+    "emitter": "git://github.com/component/emitter.git"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "chai": "*",
+    "mocha-phantomjs": "*"
+  },
+  "main": "index"
+}

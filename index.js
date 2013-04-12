@@ -98,7 +98,7 @@ Core.prototype.stop = function(){
 /**
  * @method use
  * @description 
- *   Push a `module` to `this.modules`.
+ *   Add a `module` to `this.modules`.
  * 
  * @return {Core} this for chaining
  * @api public
