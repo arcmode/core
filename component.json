@@ -1,0 +1,13 @@
+{
+  "name": "core",
+  "repo": "drojas/core",
+  "description": "Use and initialize objects with init function property.",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}
