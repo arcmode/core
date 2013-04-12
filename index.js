@@ -8,11 +8,6 @@
 
 'use strict';
 
-/*
- * Expose `Core`
- */
-module.exports = Core;
-
 /**
  * @constructor Core
  */
@@ -47,3 +42,8 @@ Core.prototype.use = function(module){
   this.modules.push(module);
   return this;
 };
+
+/*
+ * Expose `Core`
+ */
+module.exports = Core;
