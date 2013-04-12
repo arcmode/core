@@ -4,7 +4,9 @@
   "description": "Use and initialize objects with init function property.",
   "version": "0.0.1",
   "keywords": [],
-  "dependencies": {},
+  "dependencies": {
+    "apily/emitter": "*"
+  },
   "development": {},
   "license": "MIT",
   "scripts": [
