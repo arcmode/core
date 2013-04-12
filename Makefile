@@ -1,31 +1,29 @@
-NO_COLOR=\x1b[0m
-MSG_COLOR=\x1b[34;01m
 
 all: install build test
-
-build: components index.js
-	@echo "\nBuild:  component build --dev ..."
-	@component build --dev
 
 install: package.json
 	@echo "\nInstall: npm install ..."
 	@npm install
+	
+build: components index.js
+	@echo "\nBuild:  component build --dev ..."
+	@component build --dev
 
 components: component.json
 	@echo "\nInstall: component install --dev ..."
 	@component install --dev
 
-test: testNode testBrowser
+test: test-mocha test-mocha-phantomjs
 
-testNode:
-	@echo "\nTest: mocha --require should --reporter spec --colors --check-leaks"
+test-mocha:
+	@echo "\nTest: mocha"
 	@./node_modules/.bin/mocha \
 			--require should \
-			--reporter spec --colors --check-leaks
+			--reporter dot --colors --check-leaks
 
-testBrowser:
-	@echo "\nTest: mocha-phantomjs test/test.html"
-	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs test/test.html
+test-mocha-phantomjs:
+	@echo "\nTest: mocha-phantomjs"
+	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs -R dot test/test.html
 
 clean:
 	rm -fr build components node_modules
