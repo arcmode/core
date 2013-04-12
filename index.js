@@ -20,7 +20,7 @@ var Emitter = require('emitter');
 
 var Core = function() {
   this.modules = [];
-  this.emitter = new Emitter();
+  this.events = new Emitter();
 };
 
 /**
@@ -36,7 +36,7 @@ Core.prototype.init = function(){
   for (var i = modules.length - 1; i >= 0; i--){
     modules[i].init(this);
   };
-  this.emitter.emit('init');
+  this.events.emit('init');
   return this;
 };
 
