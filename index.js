@@ -41,12 +41,10 @@ Core.prototype.events = new Emitter();
  */
 
 Core.prototype.changeStatus = function(options){
-  console.log('changing status from', options.when, 'to', options.success, this);
   if (this.status === options.when) {
     var modules = this.modules;
     for (var module in modules) {
       var mod = modules[module];
-      console.log('performing', options.perform, 'on', mod);
       mod[options.perform]();
     };
     this.status = options.success;
@@ -69,7 +67,6 @@ Core.prototype.changeStatus = function(options){
  */
 
 Core.prototype.init = function(){
-  console.log('initializing', this);
   var options = {
     when: 'stopped',
     perform: 'init',
@@ -89,7 +86,6 @@ Core.prototype.init = function(){
  */
 
 Core.prototype.stop = function(){
-  console.log('stoping', this);
   var options = {
     when: 'running',
     perform: 'stop',
