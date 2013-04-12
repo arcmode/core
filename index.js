@@ -15,52 +15,21 @@
 
 var Emitter = require('emitter');
 
-/*
- * Private
- */
-
-var status = 'uninitialized';
-
-/**
- * @method joinEvents
- * @description 
- *   Adopt events from parent.
- * 
- * @api private
- */
-var joinEvents = function(hosted, host) {
-  if (host && host.hasOwnProperty('events')) {
-    hosted.events = host.events;
-  }
-  return hosted;
-};
-
 /**
  * @constructor Core
  */
 
 var Core = function() {
   this.modules = {};
+  this.status = 'stopped';
 };
 
 /*
- * Inherit from Emiiter
+ * Inherit from Emitter
  */
 
 Core.prototype.events = new Emitter();
 
-/**
- * @method status
- * @description 
- *   Get the status. Possible values: `uninitialized`, `running` and `stopped`.
- * 
- * @return {String} the status
- * @api public
- */
-
-Core.prototype.status = function(){
-  return status;
-};
 
 /**
  * @method changeStatus
@@ -72,13 +41,15 @@ Core.prototype.status = function(){
  */
 
 Core.prototype.changeStatus = function(options){
-  if (this.status() === options.when) {
+  console.log('changing status from', options.when, 'to', options.success, this);
+  if (this.status === options.when) {
     var modules = this.modules;
     for (var module in modules) {
       var mod = modules[module];
-      mod[options.perform](this);
+      console.log('performing', options.perform, 'on', mod);
+      mod[options.perform]();
     };
-    status = options.success;
+    this.status = options.success;
     this.events.emit('change status', {
       target: this,
       data: options
@@ -98,12 +69,12 @@ Core.prototype.changeStatus = function(options){
  */
 
 Core.prototype.init = function(){
-  joinEvents(this, this.parent);
+  console.log('initializing', this);
   var options = {
-    when: 'uninitialized',
+    when: 'stopped',
     perform: 'init',
     success: 'running',
-    fail: 'Initialization can be performed only on uninitialized'
+    fail: 'Initialization can be performed only on stopped'
   };
   this.changeStatus(options);
 };
@@ -118,32 +89,12 @@ Core.prototype.init = function(){
  */
 
 Core.prototype.stop = function(){
-  joinEvents(this, parent);
+  console.log('stoping', this);
   var options = {
     when: 'running',
     perform: 'stop',
     success: 'stopped',
     fail: 'Stop can be performed only on running'
-  };
-  this.changeStatus(options);
-};
-
-/**
- * @method resume
- * @description 
- *   Call the resume method on each module.
- * 
- * @return {Core} this for chaining
- * @api public
- */
-
-Core.prototype.resume = function(){
-  joinEvents(this, parent);
-  var options = {
-    when: 'stopped',
-    perform: 'resume',
-    success: 'running',
-    fail: 'Resume can be performed only on stopped'
   };
   this.changeStatus(options);
 };
@@ -158,7 +109,6 @@ Core.prototype.resume = function(){
  */
 
 Core.prototype.use = function(id, module){
-  module.parent = this;
   this.modules[id] = module;
   return this;
 };

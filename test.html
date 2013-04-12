@@ -1,29 +1,23 @@
 <script src="build/build.js"></script>
 <script>
-  var core = require('core').create();
-  core.events.on('change status', function(data) {
-    console.log(data);
-  });
-  var mock = {
-    status: 'uninitialized',
-    init: function(core){
-      console.log(core, 'initializing mock module');
-      return this;
-    },
-    stop: function(core){
-      console.log(core, 'stoping mock module');
-      return this;
-    },
-    resume: function(core){
-      console.log(core, 'resuming mock module');
-      return this;
+  var Core = require('core');
+  var core = Core.create();
+  var mock;
+  Mock = function(){};
+  Mock.prototype = Core.create();
+  Mock.prototype.events.on('change status', function(event) {
+    if (event.target instanceof Mock) {
+      switch (event.data.success) {
+        case 'running':
+          console.log('initialized', event.target);
+          break;
+        case 'stopped':
+          console.log('stopped', event.target);
+          break;
+      }
     }
-  };
-  core.use('mock', mock);
+  });
+  core.use('mock', new Mock());
   core.init();
-  console.log(core);
   core.stop();
-  console.log(core);
-  core.resume();
-  console.log(core);
 </script>
