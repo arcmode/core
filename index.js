@@ -8,12 +8,24 @@
 
 'use strict';
 
+/*
+ * Module dependencies
+ */
+
+var Emitter = require('emitter');
+
 /**
  * @constructor Core
  */
 var Core = function() {
   this.modules = [];
 };
+
+/*
+ * Inherit from Emitter
+ */
+
+Core.prototype = Emitter.prototype;
 
 /**
  * @method init
