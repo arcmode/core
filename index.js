@@ -8,8 +8,10 @@
 
 'use strict';
 
+/*
+ * Expose `Core`
+ */
 module.exports = Core;
-var instance = null;
 
 /**
  * @constructor Core
@@ -45,19 +47,3 @@ Core.prototype.use = function(module){
   this.modules.push(module);
   return this;
 };
-
-/**
- * @method instance
- * @description 
- *   Get the `Core` single instance.
- * 
- * @return {Core} the single instance
- * @api public
- */
-Core.prototype.instance = function(){
-  if (! instance) {
-    instance = new Core();
-  }
-  return instance;
-};
-
