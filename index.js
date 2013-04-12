@@ -1,3 +1,4 @@
+
 /**
  * Core
  * Use and initialize objects with init function property.
@@ -53,6 +54,20 @@ Core.prototype.use = function(module){
   this.modules.push(module);
   return this;
 };
+
+/**
+ * @method create
+ * @description 
+ *   Create a `Core`.
+ * 
+ * @return {Core} new `Core`
+ * @api public
+ */
+
+Core.create = function(module){
+  return new this();
+};
+
 
 /*
  * Expose `Core`
