@@ -1,3 +1,5 @@
+'use strict';
+
 var Core;
 
 try {
@@ -51,9 +53,9 @@ describe('Core', function(){
     describe('#use()', function(){
       it('should add a module to `this.modules`', function(){
         var core = Core.create();
-        Mock = function(){};
-        Mock.prototype = Core.create();
-        Mock.prototype.events.on('change status', function(event) {
+        this.Mock = function(){};
+        this.Mock.prototype = Core.create();
+        this.Mock.prototype.events.on('change status', function(event) {
           if (event.target instanceof Mock) {
             switch (event.data.success) {
               case 'running':
@@ -65,11 +67,10 @@ describe('Core', function(){
             }
           }
         });
-        var mock = new Mock();
+        var mock = new this.Mock();
         core.use('mock', mock);
         (core.modules.mock).should.equal(mock);
-        delete Mock;
       });
     });
   });
-})
+});
