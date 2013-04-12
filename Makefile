@@ -12,6 +12,7 @@ install: package.json
 	@npm install
 
 components: component.json
+	@echo "\nInstall: component install --dev ..."
 	@component install --dev
 
 test: testNode testBrowser
