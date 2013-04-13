@@ -4,10 +4,10 @@ var Core;
 
 try {
   Core = require('../');
-  console.log('\n  requiring from filesystem');
+  console.log('\n  requiring Core from filesystem');
 } catch(e){
   Core = require('core');
-  console.log('\n  requiring from component');
+  console.log('\n  requiring Core from component');
 }
 
 describe('Core', function(){
@@ -16,7 +16,7 @@ describe('Core', function(){
       var core = Core.create();
       (core instanceof Core).should.equal(true);
       (core.status).should.equal('stopped');
-      (Array.prototype.slice(core.modules).length).should.equal(0);
+      (core.modules).should.be.empty;
     })
   });
   describe('#prototype', function(){
@@ -30,6 +30,19 @@ describe('Core', function(){
         var core = Core.create();
         core.init();
         core.init.should.throw();
+      });
+      describe('when multiple instances are initialized', function(){
+        var core = Core.create();
+        var count = 0;
+        core.events.on('change status', function(data) {
+          if (data.target === core) {
+            count += 1;
+          }
+          it('should emit a single `change status` event for instance', function(){
+            count.should.equal(1);
+          });
+        });
+        core.init();
       });
     });
     describe('#stop()', function(){
@@ -52,10 +65,11 @@ describe('Core', function(){
     });
     describe('#use()', function(){
       it('should add a module to `this.modules`', function(){
+        var context = this;
         var core = Core.create();
-        this.Mock = function(){};
-        this.Mock.prototype = Core.create();
-        this.Mock.prototype.events.on('change status', function(event) {
+        context.Mock = function(){};
+        context.Mock.prototype = Core.create();
+        context.Mock.prototype.events.on('change status', function(event) {
           if (event.target instanceof Mock) {
             switch (event.data.success) {
               case 'running':
@@ -69,7 +83,7 @@ describe('Core', function(){
         });
         var mock = new this.Mock();
         core.use('mock', mock);
-        (core.modules.mock).should.equal(mock);
+        core.modules.should.have.property('mock').equal(mock);
       });
     });
   });
