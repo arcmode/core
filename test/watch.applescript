@@ -12,7 +12,7 @@ end tell
 delay 1 -- it seems we need this
 
 tell application "Terminal"
-  do script "cd ~/Code/core && make watch-mocha" in the last tab of window 1
+  do script "cd ~/Code/core && watch make watch-mocha" in the last tab of window 1
 end tell
 
 tell application "System Events"
@@ -24,5 +24,5 @@ end tell
 delay 1 -- it seems we need this
 
 tell application "Terminal"
-  do script "cd ~/Code/core && make watch-mocha-phantomjs" in the last tab of window 1
+  do script "cd ~/Code/core && watch make watch-phantom" in the last tab of window 1
 end tell

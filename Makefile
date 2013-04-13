@@ -19,7 +19,9 @@ test-mocha:
 	@echo "\nTest: mocha"
 	@./node_modules/.bin/mocha \
 			--require should \
-			--reporter spec --colors --check-leaks
+			--reporter spec \
+			--colors \
+			--check-leaks
 
 test-mocha-phantomjs:
 	@echo "\nTest: mocha-phantomjs"
@@ -29,12 +31,16 @@ watch:
 	@osascript test/watch.applescript
 	
 watch-mocha:
+	@component build --dev
 	@./node_modules/.bin/mocha \
 			--require should \
-			--reporter min --watch --colors --check-leaks
+			--reporter min \
+			--colors \
+			--check-leaks
 
-watch-mocha-phantomjs:
-	@watch ./node_modules/mocha-phantomjs/bin/mocha-phantomjs -R min test/test.html
+watch-phantom:
+	@component build --dev
+	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs -R min test/test.html
 
 clean:
 	rm -fr build components node_modules
