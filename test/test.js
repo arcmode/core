@@ -3,11 +3,11 @@
 var Core;
 
 try {
-  Core = require('../');
-  console.log('\n  requiring Core from filesystem');
-} catch(e){
   Core = require('core');
   console.log('\n  requiring Core from component');
+} catch(e){
+  Core = require('../');
+  console.log('\n  requiring Core from filesystem');
 }
 
 describe('Core', function(){
