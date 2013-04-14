@@ -34,7 +34,29 @@ var Core = function() {
  * Inherit from `EventEmitter.prototype` or `Emitter.prototype`.
  */
 
-Core.prototype.events = new Emitter();
+Core.prototype = Emitter.prototype;
+
+/*
+ * PubSub facade.
+ */
+
+Core.prototype.public = new Emitter();
+Core.prototype.publish = function(){
+  this.public.emit.apply(this.public, arguments);
+  return this;
+};
+Core.prototype.subscribe = function(){
+  this.public.on.apply(this.public, arguments);
+  return this;
+};
+Core.prototype.subscribeOnce = function(){
+  this.public.once.apply(this.public, arguments);
+  return this;
+};
+Core.prototype.unsubscribe = function(){
+  this.public.off.apply(this.public, arguments);
+  return this;
+};
 
 /**
  * @method changeStatus
@@ -53,7 +75,7 @@ Core.prototype.changeStatus = function(options){
       mod[options.perform]();
     };
     this.status = options.success;
-    this.events.emit('change status', {
+    this.publish('change status', {
       target: this,
       data: options
     });

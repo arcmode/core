@@ -12,15 +12,30 @@ try {
 }
 
 describe('Core', function(){
-  it('should make all instances events available to each other', function(){
+  it('should have private events', function(){
     var core1 = Core.create();
     var core2 = Core.create();
     var data = {data: 'mock'};
     var listener = sinon.spy();
-    core1.events.on('event', listener);
-    core2.events.emit('event', data);
-    listener.calledWithExactly(data).should.be.true
+    core1.on('event', listener);
+    core2.emit('event', data);
+    core1.emit('event', data);
     listener.calledOnce.should.be.true;
+    listener.calledWithExactly(data).should.be.true;
+  });
+  
+  describe('#public', function(){
+    it('should expose a publish/subscribe channel to all instances of Core',
+    function(){
+      var core1 = Core.create();
+      var core2 = Core.create();
+      var data = {data: 'mock'};
+      var listener = sinon.spy();
+      core1.subscribe('event', listener);
+      core2.publish('event', data);
+      listener.calledOnce.should.be.true;
+      listener.calledWithExactly(data).should.be.true
+    });
   });
   describe('#create()', function(){
     it('should return a stopped Core instance', function(){
@@ -45,13 +60,13 @@ describe('Core', function(){
         it('should emit a single `change status` event for instance', function(){
           var core = Core.create();
           var listener = sinon.spy();
-          core.events.on('change status', function(data){
+          core.subscribe('change status', function(data){
             if (data.target === core) {
               listener(data);
             }
           });
           core.init();
-          listener.calledOnce.should.be.true;
+          listener.callCount.should.equal(1);
         });
       });
     });
@@ -80,7 +95,7 @@ describe('Core', function(){
         context.Mock = function(){};
         context.Mock.prototype = Core.prototype;
         context.mock = new context.Mock();
-        context.mock.events.on('change status', function(event) {
+        context.mock.publish('change status', function(event) {
           if (event.target instanceof Mock) {
             switch (event.data.success) {
               case 'running':
