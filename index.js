@@ -13,7 +13,13 @@
  * Module dependencies
  */
 
-var Emitter = require('emitter');
+var Emitter;
+
+try {
+  Emitter = require('events').EventEmitter;
+} catch (err) {
+  Emitter = require('emitter');
+}
 
 /**
  * @constructor Core
@@ -25,11 +31,10 @@ var Core = function() {
 };
 
 /*
- * Inherit from Emitter
+ * Inherit from `EventEmitter.prototype` or `Emitter.prototype`.
  */
 
 Core.prototype.events = new Emitter();
-
 
 /**
  * @method changeStatus

@@ -1,5 +1,5 @@
 
-all: install build
+all: install build test
 
 # Install all dependencies
 install: install-npm install-components
@@ -15,7 +15,7 @@ install-components: component.json
 	@component install --dev
 
 # Install dependencies and build
-build: install index.js
+build: index.js
 	@echo "\nBuild:  component build --dev ..."
 	@component build --dev
 
