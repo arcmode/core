@@ -1,5 +1,5 @@
 
-all: install build test
+all: build test
 
 # Install all dependencies
 install: install-npm install-components
@@ -20,7 +20,7 @@ build: index.js
 	@component build --dev
 
 # Launch tests
-test: mocha mocha-phantomjs
+test: phantom mocha
 
 # Launch mocha
 mocha:
@@ -32,7 +32,7 @@ mocha:
 			--check-leaks
 
 # Launch mocha-phantomjs
-mocha-phantomjs:
+phantom:
 	@echo "\nTest: mocha-phantomjs"
 	@./node_modules/mocha-phantomjs/bin/mocha-phantomjs -R spec test/test.html
 

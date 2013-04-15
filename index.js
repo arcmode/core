@@ -25,9 +25,11 @@ try {
  * @constructor Core
  */
 
-var Core = function() {
+var Core = function(id){
+  this.id = id || (Math.ceil(Math.random() * 255)).toString(16);
   this.modules = {};
   this.status = 'stopped';
+  this.on('init', this.init);
 };
 
 /*
@@ -59,32 +61,6 @@ Core.prototype.unsubscribe = function(){
 };
 
 /**
- * @method changeStatus
- * @description 
- *   Change the status of this and each module.
- * 
- * @return {Core} this for chaining
- * @api public
- */
-
-Core.prototype.changeStatus = function(options){
-  if (this.status === options.when) {
-    var modules = this.modules;
-    for (var module in modules) {
-      var mod = modules[module];
-      mod[options.perform]();
-    };
-    this.status = options.success;
-    this.publish('change status', {
-      target: this,
-      data: options
-    });
-    return this;
-  }
-  throw new Error(options.fail);
-};
-
-/**
  * @method init
  * @description 
  *   Call the init method on each module.
@@ -94,32 +70,15 @@ Core.prototype.changeStatus = function(options){
  */
 
 Core.prototype.init = function(){
-  var options = {
-    when: 'stopped',
-    perform: 'init',
-    success: 'running',
-    fail: 'Initialization can be performed only on stopped'
-  };
-  this.changeStatus(options);
-};
-
-/**
- * @method stop
- * @description 
- *   Call the stop method on each module.
- * 
- * @return {Core} this for chaining
- * @api public
- */
-
-Core.prototype.stop = function(){
-  var options = {
-    when: 'running',
-    perform: 'stop',
-    success: 'stopped',
-    fail: 'Stop can be performed only on running'
-  };
-  this.changeStatus(options);
+  if (this.status === 'stopped') {
+    var modules = this.modules;
+    for (var module in modules) {
+      var mod = modules[module];
+      mod.emit('init');
+    };
+    this.status = 'running';
+  }
+  return this;
 };
 
 /**
@@ -131,8 +90,13 @@ Core.prototype.stop = function(){
  * @api public
  */
 
-Core.prototype.use = function(id, module){
-  this.modules[id] = module;
+Core.prototype.use = function(module){
+  var args = [].slice.call(arguments);
+  if (args.length > 1) {
+    module = args[1];
+    module.id = args[0];
+  }
+  this.modules[module.id] = module;
   return this;
 };
 
@@ -145,8 +109,9 @@ Core.prototype.use = function(id, module){
  * @api public
  */
 
-Core.create = function(module){
-  return new this();
+Core.create = function(id){
+  var core = new Core(id);
+  return core;
 };
 
 /*

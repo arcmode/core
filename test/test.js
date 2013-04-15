@@ -11,31 +11,22 @@ try {
   var sinon = require('sinon');
 }
 
+var timeout = 0;
+
 describe('Core', function(){
   it('should have private events', function(){
     var core1 = Core.create();
     var core2 = Core.create();
-    var data = {data: 'mock'};
+    var data1 = {data: 'mock1'};
+    var data2 = {data: 'mock2'};
     var listener = sinon.spy();
     core1.on('event', listener);
-    core2.emit('event', data);
-    core1.emit('event', data);
-    listener.calledOnce.should.be.true;
-    listener.calledWithExactly(data).should.be.true;
-  });
-  
-  describe('#public', function(){
-    it('should expose a publish/subscribe channel to all instances of Core',
-    function(){
-      var core1 = Core.create();
-      var core2 = Core.create();
-      var data = {data: 'mock'};
-      var listener = sinon.spy();
-      core1.subscribe('event', listener);
-      core2.publish('event', data);
-      listener.calledOnce.should.be.true;
-      listener.calledWithExactly(data).should.be.true
-    });
+    listener.callCount.should.equal(0);
+    core1.emit('event', data1);
+    listener.callCount.should.equal(1);
+    core2.emit('event', data2);
+    listener.callCount.should.equal(1);
+    listener.calledWithExactly(data1).should.be.true;
   });
   describe('#create()', function(){
     it('should return a stopped Core instance', function(){
@@ -45,71 +36,44 @@ describe('Core', function(){
     });
   });
   describe('#prototype', function(){
-    describe('#init()', function(){
-      it('should return a running Core instance', function(){
-        var core = Core.create();
-        core.init();
-        (core.status).should.equal('running');
-      });
-      it('should fail on running instances', function(){
-        var core = Core.create();
-        core.init();
-        core.init.should.throw();
-      });
-      describe('when multiple instances are initialized', function(){
-        it('should emit a single `change status` event for instance', function(){
-          var core = Core.create();
-          var listener = sinon.spy();
-          core.subscribe('change status', function(data){
-            if (data.target === core) {
-              listener(data);
-            }
-          });
-          core.init();
-          listener.callCount.should.equal(1);
-        });
-      });
-    });
-    describe('#stop()', function(){
-      it('should return a stopped Core instance', function(){
-        var core = Core.create();
-        core.init();
-        core.stop();
-        (core.status).should.equal('stopped');
-      });
-      it('should fail on new instances', function(){
-        var core = Core.create();
-        core.stop.should.throw();
-      });
-      it('should fail on stopped instances', function(){
-        var core = Core.create();
-        core.init();
-        core.stop();
-        core.stop.should.throw();
+    describe('#public', function(){
+      it('should expose a publish/subscribe channel to all instances of Core',
+      function(){
+        var core1 = Core.create();
+        var core2 = Core.create();
+        var data1 = {data: 'mock1'};
+        var data2 = {data: 'mock2'};
+        var listener = sinon.spy();
+        core1.subscribe('event', listener);
+        core1.publish('event', data2);
+        core2.publish('event', data1);
+        listener.callCount.should.equal(2);
+        listener.calledWithExactly(data1).should.be.true;
+        listener.calledWithExactly(data2).should.be.true;
       });
     });
     describe('#use()', function(){
-      it('should add a module to `this.modules`', function(){
-        var context = this;
-        var core = new Core();
-        context.Mock = function(){};
-        context.Mock.prototype = Core.prototype;
-        context.mock = new context.Mock();
-        context.mock.publish('change status', function(event) {
-          if (event.target instanceof Mock) {
-            switch (event.data.success) {
-              case 'running':
-                console.log('initialized', event.target);
-                break;
-              case 'stopped':
-                console.log('stopped', event.target);
-                break;
-            }
-          }
-        });
-        var mock = new this.Mock();
-        core.use('mock', mock);
-        core.modules.should.have.property('mock').equal(mock);
+      it('should add a module to #modules', function(){
+        var core = Core.create();
+        var c1 = Core.create('c1');
+        core.use(c1);
+        core.modules.should.have.property('c1').equal(c1);
+      });
+    });
+    describe('#emit(\'init\')', function(){
+      it('should propagate through #modules', function(){
+        var c1 = Core.create();
+        var c2 = Core.create();
+        var c3 = Core.create();
+        var core = Core.create('core');
+        core.use(c1);
+        c1.use(c2);
+        c2.use(c3);
+        core.emit('init');
+        core.status.should.equal('running');
+        c1.status.should.equal('running');
+        c2.status.should.equal('running');
+        c3.status.should.equal('running');
       });
     });
   });
