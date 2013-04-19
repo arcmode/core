@@ -75,6 +75,27 @@ describe('Core', function(){
         c2.status.should.equal('running');
         c3.status.should.equal('running');
       });
+      it('should be executed from dependencies to parents', function(done){
+        var app = Core.create('myapp');
+        var module = Core.create('mymod');
+        var history = [];
+        app.on('init', function(){
+          history.push(this.id);
+        });
+        module.on('init', function(){
+          history.push(this.id);
+        });
+        var loop = setInterval(function(){
+          if (history.length === 2) {
+            clearInterval(loop);
+            history[0].should.equal('mymod');
+            history[1].should.equal('myapp');
+            done();
+          }
+        }, 50);
+        app.use(module);
+        app.emit('init');
+      });
     });
   });
 });
