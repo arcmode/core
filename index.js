@@ -29,7 +29,6 @@ var Core = function(id){
   this.id = id || (Math.ceil(Math.random() * 255)).toString(16);
   this.modules = {};
   this.status = 'stopped';
-  this.on('init', this.init);
 };
 
 /*
@@ -70,13 +69,17 @@ Core.prototype.unsubscribe = function(){
  */
 
 Core.prototype.init = function(){
+  var self = this;
   if (this.status === 'stopped') {
     var modules = this.modules;
     for (var module in modules) {
       var mod = modules[module];
-      mod.emit('init');
+      mod.init();
     };
     this.status = 'running';
+    setTimeout(function(){
+      self.emit('init');
+    }, 0);
   }
   return this;
 };

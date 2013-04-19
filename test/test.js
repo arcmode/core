@@ -60,8 +60,8 @@ describe('Core', function(){
         core.modules.should.have.property('c1').equal(c1);
       });
     });
-    describe('#emit(\'init\')', function(){
-      it('should propagate through #modules', function(){
+    describe('init', function(){
+      it('should propagate through #modules (dependencies)', function(){
         var c1 = Core.create();
         var c2 = Core.create();
         var c3 = Core.create();
@@ -69,7 +69,7 @@ describe('Core', function(){
         core.use(c1);
         c1.use(c2);
         c2.use(c3);
-        core.emit('init');
+        core.init();
         core.status.should.equal('running');
         c1.status.should.equal('running');
         c2.status.should.equal('running');
@@ -92,9 +92,9 @@ describe('Core', function(){
             history[1].should.equal('myapp');
             done();
           }
-        }, 50);
+        }, 1);
         app.use(module);
-        app.emit('init');
+        app.init();
       });
     });
   });
