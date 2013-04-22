@@ -26,7 +26,7 @@ try {
  */
 
 var Core = function(id){
-  this.id = id || (Math.ceil(Math.random() * 255)).toString(16);
+  this.id = id || (Math.floor(Math.random() * 256)).toString(16);
   this.modules = {};
   this.status = 'stopped';
 };
@@ -71,15 +71,14 @@ Core.prototype.unsubscribe = function(){
 Core.prototype.init = function(){
   var self = this;
   if (this.status === 'stopped') {
+    self.emit('pre init');
     var modules = this.modules;
     for (var module in modules) {
       var mod = modules[module];
-      mod.init();
+      mod.init && mod.init();
     };
     this.status = 'running';
-    setTimeout(function(){
-      self.emit('init');
-    }, 0);
+    self.emit('init');
   }
   return this;
 };

@@ -11,8 +11,6 @@ try {
   var sinon = require('sinon');
 }
 
-var timeout = 0;
-
 describe('Core', function(){
   it('should have private events', function(){
     var core1 = Core.create();
@@ -60,7 +58,7 @@ describe('Core', function(){
         core.modules.should.have.property('c1').equal(c1);
       });
     });
-    describe('init', function(){
+    describe('#init()', function(){
       it('should propagate through #modules (dependencies)', function(){
         var c1 = Core.create();
         var c2 = Core.create();
@@ -95,6 +93,39 @@ describe('Core', function(){
         }, 1);
         app.use(module);
         app.init();
+      });
+      var NUM_DIM = 100;
+      var MAX_TIME = 0.5 * NUM_DIM;
+      it('should propagate in less than ' + MAX_TIME + 'ms through a ' + NUM_DIM
+      + 'x' + NUM_DIM + ' structure', function(done){
+        var core = Core.create('core');
+        var i = NUM_DIM;
+        while (i--){
+          core.use(Core.create());
+        }
+        for (var module in core.modules) {
+          if (core.modules.hasOwnProperty(module)) {
+            var i = NUM_DIM;
+            while (i--){
+              core.modules[module].use(Core.create());
+            }
+          }
+        }
+        var time = {
+          preInit: null,
+          init: null
+        };
+        core.on('pre init', function(){
+          time.preInit = Date.now();
+        });
+        core.on('init', function(){
+          time.init = Date.now();
+          var lapse = (time.init - time.preInit)
+          console.log('lapse:', lapse);
+          lapse.should.be.lessThan(MAX_TIME);
+          done();
+        });
+        core.init();
       });
     });
   });
