@@ -25,7 +25,7 @@ try {
  * @constructor Core
  */
 
-var Core = function(id){
+function Core(id){
   this.id = id || (Math.floor(Math.random() * 256)).toString(16);
   this.modules = {};
   this.status = 'stopped';
@@ -35,7 +35,7 @@ var Core = function(id){
  * Inherit from `EventEmitter.prototype` or `Emitter.prototype`.
  */
 
-Core.prototype = Emitter.prototype;
+Core.prototype.__proto__ = Emitter.prototype;
 
 /*
  * PubSub facade.
