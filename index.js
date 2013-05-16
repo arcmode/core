@@ -1,23 +1,6 @@
-
-/*
- * X-platform module
- */
-
-;(function (root, factory) {
+;(function(){
 
   'use strict';
-
-  if (typeof exports === 'object') {
-    module.exports = factory();
-
-  } else if (typeof define === 'function' && define.amd) {
-    define('core', factory);
-
-  } else {
-    root.core = factory();
-  }
-
-}(this, function () {
 
   /**
    * Core
@@ -139,5 +122,5 @@
    * Expose `Core`
    */
 
-  return Core;
-}));
+  module.exports = Core;
+})();
