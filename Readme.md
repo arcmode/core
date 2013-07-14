@@ -3,17 +3,6 @@
 
 A cross-platform embeddable, multi emitter Javascript prototype.
 
-## Installation
-  
-For node.js
-
-    $ npm install core
-
-For the browser
-
-    $ component install drojas/core    
-    $ component build
-
 See Makefile for details
 
 ## Example
@@ -152,11 +141,11 @@ Assuming you have `mocha` installed
 ####For the browser
 
     $ Open test/test.html
-    
+
 ####Using mocha-phantomjs
 
     $ ./node_modules/mocha-phantomjs/bin/mocha-phantomjs -R spec test/test.html
-    
+
 See Makefile and test/applescript for more options
 
 ## Todo
